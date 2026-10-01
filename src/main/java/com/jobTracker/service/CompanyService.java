@@ -21,4 +21,27 @@ public class CompanyService {
     public List<Company> getAllCompanies() {
         return companyRepository.findAll();
     }
+    public Company getCompanyById(Long id) {
+        return companyRepository.findById(id).orElse(null);
+    }
+
+    public Company updateCompany(Long id, Company updatedCompany) {
+
+        Company existingCompany = companyRepository.findById(id).orElse(null);
+
+        if (existingCompany == null) {
+            return null;
+        }
+
+        existingCompany.setName(updatedCompany.getName());
+        existingCompany.setWebsite(updatedCompany.getWebsite());
+        existingCompany.setLocation(updatedCompany.getLocation());
+        existingCompany.setDescription(updatedCompany.getDescription());
+
+        return companyRepository.save(existingCompany);
+    }
+
+    public void deleteCompany(Long id) {
+        companyRepository.deleteById(id);
+    }
 }
