@@ -1,6 +1,7 @@
 package com.jobTracker.service;
 
 import com.jobTracker.entity.Company;
+import com.jobTracker.exception.ResourceNotFoundException;
 import com.jobTracker.repository.CompanyRepository;
 
 import org.springframework.stereotype.Service;
@@ -22,7 +23,13 @@ public class CompanyService {
         return companyRepository.findAll();
     }
     public Company getCompanyById(Long id) {
-        return companyRepository.findById(id).orElse(null);
+
+        return companyRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Company with id " + id + " not found"
+                        )
+                );
     }
 
     public Company updateCompany(Long id, Company updatedCompany) {
