@@ -2,7 +2,8 @@ package com.jobTracker.controller;
 
 import com.jobTracker.entity.Company;
 import com.jobTracker.service.CompanyService;
-import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 @RestController
@@ -15,7 +16,7 @@ public class CompanyController {
     }
 
     @PostMapping
-    public Company createCompany(@RequestBody Company company) {
+    public Company createCompany(@Valid @RequestBody Company company) {
         return companyService.createCompany(company);
     }
 
@@ -31,7 +32,7 @@ public class CompanyController {
     @PutMapping("/{id}")
     public Company updateCompany(
             @PathVariable Long id,
-            @RequestBody Company company) {
+            @Valid @RequestBody Company company) {
 
         return companyService.updateCompany(id, company);
     }

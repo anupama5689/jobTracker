@@ -39,4 +39,5 @@ public class JobApplicationController {
     public void deleteApplication(@PathVariable Long id) {
         jobApplicationService.deleteApplication(id);
     }
+
 }
