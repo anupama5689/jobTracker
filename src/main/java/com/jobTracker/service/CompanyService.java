@@ -34,11 +34,13 @@ public class CompanyService {
 
     public Company updateCompany(Long id, Company updatedCompany) {
 
-        Company existingCompany = companyRepository.findById(id).orElse(null);
+        Company existingCompany = companyRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Company with id " + id + " not found"
+                        )
+                );
 
-        if (existingCompany == null) {
-            return null;
-        }
 
         existingCompany.setName(updatedCompany.getName());
         existingCompany.setWebsite(updatedCompany.getWebsite());
@@ -49,6 +51,11 @@ public class CompanyService {
     }
 
     public void deleteCompany(Long id) {
+        if (!companyRepository.existsById(id)) {
+            throw new ResourceNotFoundException(
+                    "Company with id " + id + " not found"
+            );
+        }
         companyRepository.deleteById(id);
     }
 }

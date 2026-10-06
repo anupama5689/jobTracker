@@ -1,5 +1,6 @@
 package com.jobTracker.service;
 import com.jobTracker.entity.JobApplication;
+import com.jobTracker.exception.ResourceNotFoundException;
 import com.jobTracker.repository.JobApplicationRepository;
 
 import org.springframework.stereotype.Service;
@@ -18,7 +19,13 @@ public class JobApplicationService {
         return jobApplicationRepository.findAll();
     }
     public JobApplication getApplicationById(Long id) {
-        return jobApplicationRepository.findById(id).orElse(null);
+
+        return jobApplicationRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Job application with id " + id + " not found"
+                        )
+                );
     }
     public JobApplication updateApplication(Long id, JobApplication updatedApplication) {
 
