@@ -2,6 +2,7 @@ package com.jobTracker.controller;
 import jakarta.validation.Valid;
 import com.jobTracker.entity.JobApplication;
 import com.jobTracker.service.JobApplicationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class JobApplicationController {
         this.jobApplicationService = jobApplicationService;
     }
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public JobApplication createApplication(
             @Valid @RequestBody JobApplication jobApplication) {
 
@@ -36,6 +38,7 @@ public class JobApplicationController {
         return jobApplicationService.updateApplication(id, updatedApplication);
     }
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteApplication(@PathVariable Long id) {
         jobApplicationService.deleteApplication(id);
     }
