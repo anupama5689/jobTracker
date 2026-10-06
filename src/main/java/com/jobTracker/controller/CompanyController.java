@@ -5,6 +5,8 @@ import com.jobTracker.service.CompanyService;
 import jakarta.validation.Valid;
 
 import java.util.List;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/companies")
@@ -16,6 +18,7 @@ public class CompanyController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Company createCompany(@Valid @RequestBody Company company) {
         return companyService.createCompany(company);
     }

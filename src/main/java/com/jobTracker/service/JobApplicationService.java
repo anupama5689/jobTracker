@@ -30,11 +30,12 @@ public class JobApplicationService {
     public JobApplication updateApplication(Long id, JobApplication updatedApplication) {
 
         JobApplication existingApplication =
-                jobApplicationRepository.findById(id).orElse(null);
-
-        if (existingApplication == null) {
-            return null;
-        }
+                jobApplicationRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Job application with id " + id + " not found"
+                                )
+                        );
 
         existingApplication.setJobTitle(updatedApplication.getJobTitle());
         existingApplication.setStatus(updatedApplication.getStatus());
@@ -47,6 +48,11 @@ public class JobApplicationService {
         return jobApplicationRepository.save(existingApplication);
     }
     public void deleteApplication(Long id) {
+        if (!jobApplicationRepository.existsById(id)) {
+            throw new ResourceNotFoundException(
+                    "Job application with id " + id + " not found"
+            );
+        }
         jobApplicationRepository.deleteById(id);
     }
 }
