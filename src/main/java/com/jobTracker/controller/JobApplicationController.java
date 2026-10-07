@@ -2,6 +2,8 @@ package com.jobTracker.controller;
 import jakarta.validation.Valid;
 import com.jobTracker.entity.JobApplication;
 import com.jobTracker.service.JobApplicationService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +25,8 @@ public class JobApplicationController {
         return jobApplicationService.createApplication(jobApplication);
     }
     @GetMapping
-    public List<JobApplication> getAllApplications() {
-        return jobApplicationService.getAllApplications();
+    public Page<JobApplication> getAllApplications(Pageable pageable) {
+        return jobApplicationService.getAllApplications(pageable);
     }
     @GetMapping("/{id}")
     public JobApplication getApplicationById(@PathVariable Long id) {
@@ -42,5 +44,10 @@ public class JobApplicationController {
     public void deleteApplication(@PathVariable Long id) {
         jobApplicationService.deleteApplication(id);
     }
+    @GetMapping("/filter")
+    public List<JobApplication> getApplicationsByStatus(
+            @RequestParam String status) {
 
+        return jobApplicationService.getApplicationsByStatus(status);
+    }
 }

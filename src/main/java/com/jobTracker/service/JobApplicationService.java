@@ -3,6 +3,8 @@ import com.jobTracker.entity.JobApplication;
 import com.jobTracker.exception.ResourceNotFoundException;
 import com.jobTracker.repository.JobApplicationRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +17,9 @@ public class JobApplicationService {
     }
     public JobApplication createApplication(JobApplication jobApplication) {
         return jobApplicationRepository.save(jobApplication);
-    }public List<JobApplication> getAllApplications() {
-        return jobApplicationRepository.findAll();
+    }
+    public Page<JobApplication> getAllApplications(Pageable pageable) {
+        return jobApplicationRepository.findAll(pageable);
     }
     public JobApplication getApplicationById(Long id) {
 
@@ -54,5 +57,8 @@ public class JobApplicationService {
             );
         }
         jobApplicationRepository.deleteById(id);
+    }
+    public List<JobApplication> getApplicationsByStatus(String status) {
+        return jobApplicationRepository.findByStatus(status);
     }
 }
