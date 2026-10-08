@@ -61,4 +61,10 @@ public class JobApplicationService {
     public List<JobApplication> getApplicationsByStatus(String status) {
         return jobApplicationRepository.findByStatus(status);
     }
+    public List<JobApplication> getApplicationsByJobType(String jobType) {
+        return jobApplicationRepository.findByJobType(jobType);
+    }
+    public Page<JobApplication> searchApplicationsByJobTitle(String jobTitle, Pageable pageable) {
+        return jobApplicationRepository.findByJobTitleContainingIgnoreCase(jobTitle, pageable);
+    }
 }

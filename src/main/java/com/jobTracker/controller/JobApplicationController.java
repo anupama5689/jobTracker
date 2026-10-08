@@ -50,4 +50,16 @@ public class JobApplicationController {
 
         return jobApplicationService.getApplicationsByStatus(status);
     }
+    @GetMapping("/filter/job-type")
+    public List<JobApplication> getApplicationsByJobType(
+            @RequestParam String jobType) {
+
+        return jobApplicationService.getApplicationsByJobType(jobType);
+    }
+    @GetMapping("/search")
+    public List<JobApplication> searchApplicationsByJobTitle(
+            @RequestParam String jobTitle) {
+
+        return jobApplicationService.searchApplicationsByJobTitle(jobTitle);
+    }
 }
