@@ -57,9 +57,9 @@ public class JobApplicationController {
         return jobApplicationService.getApplicationsByJobType(jobType);
     }
     @GetMapping("/search")
-    public List<JobApplication> searchApplicationsByJobTitle(
-            @RequestParam String jobTitle) {
+    public Page<JobApplication> searchApplicationsByJobTitle(
+            @RequestParam String jobTitle,Pageable pageable) {
 
-        return jobApplicationService.searchApplicationsByJobTitle(jobTitle);
+        return jobApplicationService.searchApplicationsByJobTitle(jobTitle,pageable);
     }
 }
