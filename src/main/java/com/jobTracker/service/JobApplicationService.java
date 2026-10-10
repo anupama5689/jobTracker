@@ -67,4 +67,42 @@ public class JobApplicationService {
     public Page<JobApplication> searchApplicationsByJobTitle(String jobTitle, Pageable pageable) {
         return jobApplicationRepository.findByJobTitleContainingIgnoreCase(jobTitle, pageable);
     }
+    public Page<JobApplication> getApplicationsByStatusAndJobType(
+            String status,
+            String jobType,
+            Pageable pageable) {
+
+        return jobApplicationRepository.findByStatusAndJobType(
+                status,
+                jobType,
+                pageable
+        );
+    }
+    public Page<JobApplication> getApplicationsByStatusTypeAndTitle(
+            String status,
+            String jobType,
+            String jobTitle,
+            Pageable pageable) {
+
+        return jobApplicationRepository
+                .findByStatusAndJobTypeAndJobTitleContainingIgnoreCase(
+                        status,
+                        jobType,
+                        jobTitle,
+                        pageable
+                );
+    }
+    public Page<JobApplication> searchApplications(
+            String status,
+            String jobType,
+            String jobTitle,
+            Pageable pageable) {
+
+        return jobApplicationRepository.searchApplications(
+                status,
+                jobType,
+                jobTitle,
+                pageable
+        );
+    }
 }

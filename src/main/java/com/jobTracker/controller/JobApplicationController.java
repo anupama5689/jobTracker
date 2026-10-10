@@ -25,8 +25,18 @@ public class JobApplicationController {
         return jobApplicationService.createApplication(jobApplication);
     }
     @GetMapping
-    public Page<JobApplication> getAllApplications(Pageable pageable) {
-        return jobApplicationService.getAllApplications(pageable);
+    public Page<JobApplication> getAllApplications(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String jobType,
+            @RequestParam(required = false) String jobTitle,
+            Pageable pageable) {
+
+        return jobApplicationService.searchApplications(
+                status,
+                jobType,
+                jobTitle,
+                pageable
+        );
     }
     @GetMapping("/{id}")
     public JobApplication getApplicationById(@PathVariable Long id) {
@@ -61,5 +71,31 @@ public class JobApplicationController {
             @RequestParam String jobTitle,Pageable pageable) {
 
         return jobApplicationService.searchApplicationsByJobTitle(jobTitle,pageable);
+    }
+    @GetMapping("/filter/status-and-type")
+    public Page<JobApplication> getApplicationsByStatusAndJobType(
+            @RequestParam String status,
+            @RequestParam String jobType,
+            Pageable pageable) {
+
+        return jobApplicationService.getApplicationsByStatusAndJobType(
+                status,
+                jobType,
+                pageable
+        );
+    }
+    @GetMapping("/filter/advanced")
+    public Page<JobApplication> getApplicationsByStatusTypeAndTitle(
+            @RequestParam String status,
+            @RequestParam String jobType,
+            @RequestParam String jobTitle,
+            Pageable pageable) {
+
+        return jobApplicationService.getApplicationsByStatusTypeAndTitle(
+                status,
+                jobType,
+                jobTitle,
+                pageable
+        );
     }
 }
