@@ -1,5 +1,6 @@
 package com.jobTracker.service;
-
+import java.util.List;
+import com.jobTracker.dto.CompanyResponseDTO;
 import com.jobTracker.entity.Company;
 import com.jobTracker.exception.ResourceNotFoundException;
 import com.jobTracker.repository.CompanyRepository;
@@ -15,31 +16,41 @@ public class CompanyService {
         this.companyRepository = companyRepository;
     }
 
-    public Company createCompany(Company company) {
-        return companyRepository.save(company);
+
+    public CompanyResponseDTO createCompany(Company company) {
+        Company savedCompany = companyRepository.save(company);
+
+        return convertToDTO(savedCompany);
     }
 
-    public List<Company> getAllCompanies() {
-        return companyRepository.findAll();
-    }
-    public Company getCompanyById(Long id) {
 
-        return companyRepository.findById(id)
+
+
+    public List<CompanyResponseDTO> getAllCompanies() {
+        return companyRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+
+    public CompanyResponseDTO getCompanyById(Long id) {
+        Company company = companyRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Company with id " + id + " not found"
-                        )
-                );
+                        ));
+
+        return convertToDTO(company);
     }
 
-    public Company updateCompany(Long id, Company updatedCompany) {
 
-        Company existingCompany = companyRepository.findById(id)
+    public CompanyResponseDTO updateCompany(Long id, Company updatedCompany) {
+        Company company = companyRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Company with id " + id + " not found"
-                        )
-                );
+                        ));
 
 
         existingCompany.setName(updatedCompany.getName());
@@ -47,7 +58,8 @@ public class CompanyService {
         existingCompany.setLocation(updatedCompany.getLocation());
         existingCompany.setDescription(updatedCompany.getDescription());
 
-        return companyRepository.save(existingCompany);
+        Company savedCompany = companyRepository.save(company);
+        return convertToDTO(savedCompany);
     }
 
     public void deleteCompany(Long id) {
@@ -58,4 +70,15 @@ public class CompanyService {
         }
         companyRepository.deleteById(id);
     }
+
+    private CompanyResponseDTO convertToDTO(Company company) {
+        return new CompanyResponseDTO(
+                company.getId(),
+                company.getName(),
+                company.getWebsite(),
+                company.getLocation(),
+                company.getDescription()
+        );
+    }
+
 }
