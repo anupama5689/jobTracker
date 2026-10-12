@@ -1,8 +1,10 @@
 package com.jobTracker.service;
+import com.jobTracker.dto.JobApplicationResponseDTO;
 import com.jobTracker.entity.JobApplication;
 import com.jobTracker.exception.ResourceNotFoundException;
 import com.jobTracker.repository.JobApplicationRepository;
-
+import com.jobTracker.dto.CompanyResponseDTO;
+import com.jobTracker.entity.Company;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,22 +17,24 @@ public class JobApplicationService {
     public JobApplicationService(JobApplicationRepository jobApplicationRepository) {
         this.jobApplicationRepository = jobApplicationRepository;
     }
-    public JobApplication createApplication(JobApplication jobApplication) {
-        return jobApplicationRepository.save(jobApplication);
+    public JobApplicationResponseDTO createApplication(JobApplication application) {
+        JobApplication saved= jobApplicationRepository.save(application);
+        return convertToDTO(saved);
     }
-    public Page<JobApplication> getAllApplications(Pageable pageable) {
-        return jobApplicationRepository.findAll(pageable);
+    public Page<JobApplicationResponseDTO> getAllApplications(Pageable pageable) {
+        return jobApplicationRepository.findAll(pageable).map(this::convertToDTO);
     }
-    public JobApplication getApplicationById(Long id) {
+    public JobApplicationResponseDTO getApplicationById(Long id) {
 
-        return jobApplicationRepository.findById(id)
+        JobApplication application=jobApplicationRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Job application with id " + id + " not found"
                         )
                 );
+        return convertToDTO(application);
     }
-    public JobApplication updateApplication(Long id, JobApplication updatedApplication) {
+    public JobApplicationResponseDTO updateApplication(Long id, JobApplication updatedApplication) {
 
         JobApplication existingApplication =
                 jobApplicationRepository.findById(id)
@@ -48,7 +52,8 @@ public class JobApplicationService {
         existingApplication.setJobUrl(updatedApplication.getJobUrl());
         existingApplication.setCompany(updatedApplication.getCompany());
 
-        return jobApplicationRepository.save(existingApplication);
+        JobApplication saved= jobApplicationRepository.save(existingApplication);
+        return convertToDTO(saved);
     }
     public void deleteApplication(Long id) {
         if (!jobApplicationRepository.existsById(id)) {
@@ -58,14 +63,14 @@ public class JobApplicationService {
         }
         jobApplicationRepository.deleteById(id);
     }
-    public List<JobApplication> getApplicationsByStatus(String status) {
-        return jobApplicationRepository.findByStatus(status);
+    public List<JobApplicationResponseDTO> getApplicationsByStatus(String status) {
+        return jobApplicationRepository.findByStatus(status).stream().map(this::convertToDTO).toList();
     }
     public List<JobApplication> getApplicationsByJobType(String jobType) {
         return jobApplicationRepository.findByJobType(jobType);
     }
-    public Page<JobApplication> searchApplicationsByJobTitle(String jobTitle, Pageable pageable) {
-        return jobApplicationRepository.findByJobTitleContainingIgnoreCase(jobTitle, pageable);
+    public Page<JobApplicationResponseDTO> searchApplicationsByJobTitle(String jobTitle, Pageable pageable) {
+        return jobApplicationRepository.findByJobTitleContainingIgnoreCase(jobTitle, pageable).map(this::convertToDTO);
     }
     public Page<JobApplication> getApplicationsByStatusAndJobType(
             String status,
@@ -92,7 +97,7 @@ public class JobApplicationService {
                         pageable
                 );
     }
-    public Page<JobApplication> searchApplications(
+    public Page<JobApplicationResponseDTO> searchApplications(
             String status,
             String jobType,
             String jobTitle,
@@ -103,6 +108,34 @@ public class JobApplicationService {
                 jobType,
                 jobTitle,
                 pageable
+        ).map(this::convertToDTO);
+    }
+
+    private JobApplicationResponseDTO convertToDTO(JobApplication application) {
+        Company company = application.getCompany();
+
+        CompanyResponseDTO companyDTO = null;
+
+        if (company != null) {
+            companyDTO = new CompanyResponseDTO(
+                    company.getId(),
+                    company.getName(),
+                    company.getWebsite(),
+                    company.getLocation(),
+                    company.getDescription()
+            );
+        }
+
+        return new JobApplicationResponseDTO(
+                application.getId(),
+                application.getJobTitle(),
+                application.getStatus(),
+                application.getApplicationDate(),
+                application.getDeadline(),
+                application.getJobType(),
+                application.getJobUrl(),
+                companyDTO
         );
     }
+
 }

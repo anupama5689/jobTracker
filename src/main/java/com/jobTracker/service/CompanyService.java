@@ -52,11 +52,10 @@ public class CompanyService {
                                 "Company with id " + id + " not found"
                         ));
 
-
-        existingCompany.setName(updatedCompany.getName());
-        existingCompany.setWebsite(updatedCompany.getWebsite());
-        existingCompany.setLocation(updatedCompany.getLocation());
-        existingCompany.setDescription(updatedCompany.getDescription());
+        company.setName(updatedCompany.getName());
+        company.setWebsite(updatedCompany.getWebsite());
+        company.setLocation(updatedCompany.getLocation());
+        company.setDescription(updatedCompany.getDescription());
 
         Company savedCompany = companyRepository.save(company);
         return convertToDTO(savedCompany);
