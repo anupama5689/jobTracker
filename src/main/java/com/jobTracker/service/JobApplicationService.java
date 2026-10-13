@@ -66,13 +66,13 @@ public class JobApplicationService {
     public List<JobApplicationResponseDTO> getApplicationsByStatus(String status) {
         return jobApplicationRepository.findByStatus(status).stream().map(this::convertToDTO).toList();
     }
-    public List<JobApplication> getApplicationsByJobType(String jobType) {
-        return jobApplicationRepository.findByJobType(jobType);
+    public List<JobApplicationResponseDTO> getApplicationsByJobType(String jobType) {
+        return jobApplicationRepository.findByJobType(jobType).stream().map(this::convertToDTO).toList();
     }
     public Page<JobApplicationResponseDTO> searchApplicationsByJobTitle(String jobTitle, Pageable pageable) {
         return jobApplicationRepository.findByJobTitleContainingIgnoreCase(jobTitle, pageable).map(this::convertToDTO);
     }
-    public Page<JobApplication> getApplicationsByStatusAndJobType(
+    public Page<JobApplicationResponseDTO> getApplicationsByStatusAndJobType(
             String status,
             String jobType,
             Pageable pageable) {
@@ -81,9 +81,9 @@ public class JobApplicationService {
                 status,
                 jobType,
                 pageable
-        );
+        ).map(this::convertToDTO);
     }
-    public Page<JobApplication> getApplicationsByStatusTypeAndTitle(
+    public Page<JobApplicationResponseDTO> getApplicationsByStatusTypeAndTitle(
             String status,
             String jobType,
             String jobTitle,
@@ -95,7 +95,7 @@ public class JobApplicationService {
                         jobType,
                         jobTitle,
                         pageable
-                );
+                ).map(this::convertToDTO);
     }
     public Page<JobApplicationResponseDTO> searchApplications(
             String status,

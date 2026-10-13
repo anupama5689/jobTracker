@@ -1,4 +1,5 @@
 package com.jobTracker.controller;
+import com.jobTracker.dto.JobApplicationResponseDTO;
 import jakarta.validation.Valid;
 import com.jobTracker.entity.JobApplication;
 import com.jobTracker.service.JobApplicationService;
@@ -19,13 +20,13 @@ public class JobApplicationController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public JobApplication createApplication(
+    public JobApplicationResponseDTO createApplication(
             @Valid @RequestBody JobApplication jobApplication) {
 
         return jobApplicationService.createApplication(jobApplication);
     }
     @GetMapping
-    public Page<JobApplication> getAllApplications(
+    public Page<JobApplicationResponseDTO> getAllApplications(
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String jobType,
             @RequestParam(required = false) String jobTitle,
@@ -39,13 +40,13 @@ public class JobApplicationController {
         );
     }
     @GetMapping("/{id}")
-    public JobApplication getApplicationById(@PathVariable Long id) {
+    public JobApplicationResponseDTO getApplicationById(@PathVariable Long id) {
         return jobApplicationService.getApplicationById(id);
     }
     @PutMapping("/{id}")
-    public JobApplication updateApplication(
+    public JobApplicationResponseDTO updateApplication(
             @PathVariable Long id,
-           @Valid @RequestBody JobApplication updatedApplication) {
+            @Valid @RequestBody JobApplication updatedApplication) {
 
         return jobApplicationService.updateApplication(id, updatedApplication);
     }
@@ -55,25 +56,25 @@ public class JobApplicationController {
         jobApplicationService.deleteApplication(id);
     }
     @GetMapping("/filter")
-    public List<JobApplication> getApplicationsByStatus(
+    public List<JobApplicationResponseDTO> getApplicationsByStatus(
             @RequestParam String status) {
 
         return jobApplicationService.getApplicationsByStatus(status);
     }
     @GetMapping("/filter/job-type")
-    public List<JobApplication> getApplicationsByJobType(
+    public List<JobApplicationResponseDTO> getApplicationsByJobType(
             @RequestParam String jobType) {
 
         return jobApplicationService.getApplicationsByJobType(jobType);
     }
     @GetMapping("/search")
-    public Page<JobApplication> searchApplicationsByJobTitle(
+    public Page<JobApplicationResponseDTO> searchApplicationsByJobTitle(
             @RequestParam String jobTitle,Pageable pageable) {
 
         return jobApplicationService.searchApplicationsByJobTitle(jobTitle,pageable);
     }
     @GetMapping("/filter/status-and-type")
-    public Page<JobApplication> getApplicationsByStatusAndJobType(
+    public Page<JobApplicationResponseDTO> getApplicationsByStatusAndJobType(
             @RequestParam String status,
             @RequestParam String jobType,
             Pageable pageable) {
@@ -85,7 +86,7 @@ public class JobApplicationController {
         );
     }
     @GetMapping("/filter/advanced")
-    public Page<JobApplication> getApplicationsByStatusTypeAndTitle(
+    public Page<JobApplicationResponseDTO> getApplicationsByStatusTypeAndTitle(
             @RequestParam String status,
             @RequestParam String jobType,
             @RequestParam String jobTitle,
